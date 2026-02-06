@@ -50,4 +50,5 @@ class EventServiceTest {
         assertThatThrownBy(() -> eventService.findById(1L))
                 .isInstanceOf(EntityNotFoundException.class);
     }
+public class EventServiceTest {
 }
