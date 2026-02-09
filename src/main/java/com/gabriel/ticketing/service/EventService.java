@@ -2,7 +2,7 @@ package com.gabriel.ticketing.service;
 
 import com.gabriel.ticketing.domain.event.Event;
 import com.gabriel.ticketing.domain.event.EventRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.gabriel.ticketing.exception.EventNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +16,12 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Event createEvent ( Event event) {
+    public Event createEvent(Event event) {
         return eventRepository.save(event);
     }
 
     public Event findById(Long id) {
-        return eventRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Event not Found"));
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException(id));
     }
 }
