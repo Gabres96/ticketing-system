@@ -29,8 +29,21 @@ public class Event {
         this.capacity = capacity;
     }
 
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getLocation() { return location; }
-    public int getCapacity() { return capacity; }
+    public Long getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getLocation() {
+        return location;
+    }
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
 }
