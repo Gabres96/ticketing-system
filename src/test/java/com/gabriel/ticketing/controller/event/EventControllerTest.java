@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gabriel.ticketing.domain.event.Event;
 import com.gabriel.ticketing.dto.event.CreateEventRequest;
+import com.gabriel.ticketing.exception.EventNotFoundException;
 import com.gabriel.ticketing.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,10 @@ import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -79,5 +82,19 @@ class EventControllerTest {
 
         mockMvc.perform(get("/api/events/{id}", 1L))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void shouldReturn404WhenEventNotFound() throws Exception {
+
+        when(eventService.findById(1L))
+                .thenThrow(new EventNotFoundException(1L));
+
+        mockMvc.perform(get("/api/events/{id}", 1L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Resource not found"))
+                .andExpect(jsonPath("$.message").value("Event not found with id: 1"));
     }
 }

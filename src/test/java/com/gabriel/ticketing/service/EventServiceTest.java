@@ -2,7 +2,7 @@ package com.gabriel.ticketing.service;
 
 import com.gabriel.ticketing.domain.event.Event;
 import com.gabriel.ticketing.domain.event.EventRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.gabriel.ticketing.exception.EventNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,6 +48,8 @@ class EventServiceTest {
         when(eventRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> eventService.findById(1L))
-                .isInstanceOf(EntityNotFoundException.class);
+                .isInstanceOf(EventNotFoundException.class)
+                .hasMessage("Event not found with id: 1");
     }
+
 }
