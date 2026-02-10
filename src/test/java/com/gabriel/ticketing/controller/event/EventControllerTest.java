@@ -97,4 +97,22 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.error").value("Resource not found"))
                 .andExpect(jsonPath("$.message").value("Event not found with id: 1"));
     }
+
+    @Test
+    @WithMockUser
+    void shouldReturn400WhenCreateEventRequestIsInvalid() throws Exception {
+        CreateEventRequest request = new CreateEventRequest(
+                "",
+                "Rio De Janeiro",
+                LocalDateTime.now().plusDays(30),100_000
+        );
+
+        mockMvc.perform(post("/api/events")
+                .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Validation error"));
+
+    }
 }
