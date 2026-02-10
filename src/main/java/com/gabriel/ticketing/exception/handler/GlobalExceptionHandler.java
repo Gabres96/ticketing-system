@@ -31,22 +31,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handleGenericException(
-            Exception ex,
-            HttpServletRequest request
-    ) {
-        ApiErrorResponse error = new ApiErrorResponse(
-                Instant.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal server error",
-                "Unexpected error occurred",
-                request.getRequestURI()
-        );
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationException(
             MethodArgumentNotValidException ex,
@@ -57,9 +41,6 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .findFirst()
-                .orElse("Invalid request");
-                .findFirst()
-                .map(error -> error.getField() + " " + error.getDefaultMessage())
                 .orElse("Validation error");
 
         ApiErrorResponse error = new ApiErrorResponse(
@@ -82,8 +63,6 @@ public class GlobalExceptionHandler {
                 Instant.now(),
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Business rule violation",
-                HttpStatus.BAD_REQUEST.value(),
-                "Business Rule Violation",
                 ex.getMessage(),
                 request.getRequestURI()
         );
@@ -91,8 +70,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(error);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorResponse> handleGenericException(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                Instant.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal server error",
+                "Unexpected error occurred",
+                request.getRequestURI()
+        );
 
-        return ResponseEntity.badRequest().body(error);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
+
 
