@@ -55,6 +55,9 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .findFirst()
+                .orElse("Invalid request");
                 .findFirst()
                 .map(error -> error.getField() + " " + error.getDefaultMessage())
                 .orElse("Validation error");
@@ -77,14 +80,19 @@ public class GlobalExceptionHandler {
     ) {
         ApiErrorResponse error = new ApiErrorResponse(
                 Instant.now(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Business rule violation",
                 HttpStatus.BAD_REQUEST.value(),
                 "Business Rule Violation",
                 ex.getMessage(),
                 request.getRequestURI()
         );
 
-        return ResponseEntity.badRequest().body(error);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(error);
     }
 
+
+        return ResponseEntity.badRequest().body(error);
+    }
 }
 
