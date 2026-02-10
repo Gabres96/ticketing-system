@@ -5,6 +5,7 @@ import com.gabriel.ticketing.dto.event.EventResponse;
 import com.gabriel.ticketing.domain.event.Event;
 
 import com.gabriel.ticketing.service.EventService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<EventResponse> createEvent(@RequestBody CreateEventRequest request) {
+    public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody CreateEventRequest request) {
         Event event = new Event(
                 request.name(),
                 request.location(),

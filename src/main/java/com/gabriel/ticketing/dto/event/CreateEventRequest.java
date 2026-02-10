@@ -7,13 +7,13 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public record CreateEventRequest(
-        @NotBlank
+        @NotBlank(message = "Event name must not be blank")
         String name,
         @NotBlank
         String location,
         @Future
         LocalDateTime eventDate,
         @Positive
-        int capacity
+        Integer capacity
 ) {
 }
