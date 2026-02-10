@@ -66,5 +66,4 @@ class EventServiceTest {
                 .isInstanceOf(BusinessException.class)
                 .hasMessage("Event date cannot be in the past");
     }
-
 }

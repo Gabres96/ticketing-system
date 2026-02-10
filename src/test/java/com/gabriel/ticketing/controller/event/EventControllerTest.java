@@ -140,5 +140,16 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.error").value("Business rule violation"))
                 .andExpect(jsonPath("$.message").value("Event date cannot be in the past"));
+                "Rio De Janeiro",
+                LocalDateTime.now().plusDays(30),100_000
+        );
+
+        mockMvc.perform(post("/api/events")
+                .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Validation error"));
+
     }
 }
