@@ -2,6 +2,7 @@ package com.gabriel.ticketing.service;
 
 import com.gabriel.ticketing.domain.event.Event;
 import com.gabriel.ticketing.domain.event.EventRepository;
+import com.gabriel.ticketing.exception.BusinessException;
 import com.gabriel.ticketing.exception.EventNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +51,20 @@ class EventServiceTest {
         assertThatThrownBy(() -> eventService.findById(1L))
                 .isInstanceOf(EventNotFoundException.class)
                 .hasMessage("Event not found with id: 1");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEventDateIsInThePast() {
+        Event event = new Event(
+                "Evento Teste",
+                "São Paulo",
+                LocalDateTime.now().minusDays(1),
+                100
+        );
+
+        assertThatThrownBy(() -> eventService.createEvent(event))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage("Event date cannot be in the past");
     }
 
 }
