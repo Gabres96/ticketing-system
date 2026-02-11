@@ -1,22 +1,26 @@
 package com.gabriel.ticketing.domain.event;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "event")
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String location;
+
+    @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
+
+    @Column(nullable = false)
     private int capacity;
 
     protected Event() {
@@ -32,18 +36,20 @@ public class Event {
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
+
     public String getLocation() {
         return location;
-    }
-    public int getCapacity() {
-        return capacity;
     }
 
     public LocalDateTime getEventDate() {
         return eventDate;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
 }
