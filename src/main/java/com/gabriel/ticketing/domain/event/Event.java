@@ -1,6 +1,8 @@
 package com.gabriel.ticketing.domain.event;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -51,5 +53,8 @@ public class Event {
 
     public int getCapacity() {
         return capacity;
+    }
+
+    public static interface EventRepository extends JpaRepository<Event, Long> {
     }
 }

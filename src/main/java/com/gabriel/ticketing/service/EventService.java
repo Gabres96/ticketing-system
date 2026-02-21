@@ -29,10 +29,12 @@ public class EventService {
 
         Event savedEvent = eventRepository.save(event);
 
-        try {
-            kafkaTemplate.send("event-created-topic", savedEvent.getId().toString(), savedEvent);
-        } catch (Exception e) {
-            System.err.println("Erro ao enviar para o Kafka: " + e.getMessage());
+        if (savedEvent.getId() != null) {
+            try {
+                kafkaTemplate.send("event-created-topic", savedEvent.getId().toString(), savedEvent);
+            } catch (Exception e) {
+                System.err.println("Erro ao enviar para o Kafka: " + e.getMessage());
+            }
         }
 
         return savedEvent;

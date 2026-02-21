@@ -9,12 +9,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,24 +27,25 @@ class EventServiceTest {
     @Mock
     private EventRepository eventRepository;
 
+    @Mock
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
     @InjectMocks
     private EventService eventService;
 
     @Test
     void shouldCreateEventSuccessfully() {
-        Event event = new Event(
-                "Rock in Rio",
-                "Rio de Janeiro",
-                LocalDateTime.now().plusDays(30),
-                100_000
-        );
+        Event event = new Event("Rock in Rio", "Rio", LocalDateTime.now().plusDays(30), 100_000);
 
-        when(eventRepository.save(event)).thenReturn(event);
+        ReflectionTestUtils.setField(event, "id", 1L);
+
+        when(eventRepository.save(any(Event.class))).thenReturn(event);
 
         Event savedEvent = eventService.createEvent(event);
 
         assertThat(savedEvent).isNotNull();
-        verify(eventRepository).save(event);
+        assertThat(savedEvent.getId()).isEqualTo(1L);
+        verify(eventRepository).save(any(Event.class));
     }
 
     @Test
@@ -55,12 +59,7 @@ class EventServiceTest {
 
     @Test
     void shouldThrowExceptionWhenEventDateIsInThePast() {
-        Event event = new Event(
-                "Evento Teste",
-                "São Paulo",
-                LocalDateTime.now().minusDays(1),
-                100
-        );
+        Event event = new Event("Evento Teste", "SP", LocalDateTime.now().minusDays(1), 100);
 
         assertThatThrownBy(() -> eventService.createEvent(event))
                 .isInstanceOf(BusinessException.class)

@@ -1,5 +1,6 @@
-package com.gabriel.ticketing.domain.event;
+package com.gabriel.ticketing.domain;
 
+import com.gabriel.ticketing.domain.event.Event;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -12,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class EventRepositoryIT {
 
     @Autowired
-    private EventRepository eventRepository;
+    private Event.EventRepository eventRepository;
 
     @Test
     void shouldPersistAndLoadEvent() {
