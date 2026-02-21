@@ -3,14 +3,38 @@ spring:
     url: jdbc:postgresql://localhost:5432/ticketing
     username: ticketing
     password: ticketing
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+    show-sql: true
 
   flyway:
     enabled: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: true
+    consumer:
+      group-id: ticketing-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    properties:
+      request.timeout.ms: 20000
+
+  security:
+    user:
+      name: admin
+      password: admin
 
 server:
   port: 8085

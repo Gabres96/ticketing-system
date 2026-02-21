@@ -2,6 +2,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
   flyway:
     enabled: true
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      write-dates-as-timestamps: false
+
+logging:
+  level:
+    org.springdoc: DEBUG
+    org.springframework.web: DEBUG
