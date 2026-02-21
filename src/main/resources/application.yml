@@ -14,3 +14,8 @@ logging:
   level:
     org.springdoc: DEBUG
     org.springframework.web: DEBUG
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:123456}
