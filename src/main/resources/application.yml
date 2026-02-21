@@ -1,3 +1,7 @@
 spring:
-  application:
-    name: ticketing-system
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    enabled: true
