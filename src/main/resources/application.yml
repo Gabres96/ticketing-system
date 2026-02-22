@@ -10,6 +10,20 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+  # Adicione apenas este bloco simples do Kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: ticketing-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 logging:
   level:
     org.springdoc: DEBUG
