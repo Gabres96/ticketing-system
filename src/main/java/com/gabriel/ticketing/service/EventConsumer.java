@@ -29,13 +29,10 @@ public class EventConsumer {
     @KafkaListener(topics = "event-created-topic", groupId = "ticketing-group")
     @Transactional
     public void consume(Event eventData) {
-        log.info("#### Mensagem consumida do Kafka - Iniciando Geração de Ingressos ####");
-
         Event event = eventRepository.findById(eventData.getId())
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado: " + eventData.getId()));
 
-        log.info("Evento Recebido: ID={}, Nome={}, Capacidade={}",
-                event.getId(), event.getName(), event.getCapacity());
+        log.info("Gerando {} ingressos para o evento: {}", event.getCapacity(), event.getName());
 
         List<Ticket> tickets = new ArrayList<>();
         for (int i = 0; i < event.getCapacity(); i++) {
@@ -44,6 +41,6 @@ public class EventConsumer {
 
         ticketRepository.saveAll(tickets);
 
-        log.info(">>>> SUCESSO: {} ingressos gerados para o evento ID {}", tickets.size(), event.getId());
+        log.info("Ingressos gerados com sucesso para o evento ID {}", event.getId());
     }
 }
